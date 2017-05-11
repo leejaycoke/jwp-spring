@@ -5,6 +5,7 @@ public class User {
 	private String password;
 	private String name;
 	private String email;
+	private boolean guestUser;
 
 	public User() {
 	}
@@ -68,6 +69,14 @@ public class User {
 
 	public boolean isSameUser(String newUserId) {
 		return userId.equals(newUserId);
+	}
+
+	public boolean isGuestUser() {
+		return guestUser;
+	}
+
+	public void setGuestUser(boolean guestUser) {
+		this.guestUser = guestUser;
 	}
 
 	@Override

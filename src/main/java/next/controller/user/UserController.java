@@ -1,11 +1,9 @@
 package next.controller.user;
 
-import javax.servlet.http.HttpSession;
-
+import annotation.LoginUser;
 import next.controller.UserSessionUtils;
 import next.dao.UserDao;
 import next.model.User;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/users")
@@ -22,11 +22,11 @@ public class UserController {
 	private UserDao userDao = UserDao.getInstance();
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(HttpSession session, Model model) throws Exception {
-		if (!UserSessionUtils.isLogined(session)) {
-			return "redirect:/users/loginForm";
-		}
-		
+    public String index(@LoginUser User loginUser, Model model) throws Exception {
+	    if (loginUser.isGuestUser()) {
+            return "redirect:/users/loginForm";
+        }
+
         model.addAttribute("users", userDao.findAll());
         return "/user/list";
     }
@@ -107,4 +107,5 @@ public class UserController {
         session.removeAttribute(UserSessionUtils.USER_SESSION_KEY);
         return "redirect:/";
     }
+
 }
